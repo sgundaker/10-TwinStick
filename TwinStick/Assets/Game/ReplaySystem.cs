@@ -6,16 +6,24 @@ public class ReplaySystem : MonoBehaviour {
     private const int bufferFrames = 100;
     private MyKeyFrame[] keyFrames = new MyKeyFrame[bufferFrames];
     private Rigidbody rigidBody;
+    private GameManager manager;
 	
 	void Start () {
         //MyKeyFrame testKey = new MyKeyFrame(1.0f, Vector3.up, Quaternion.identity);
-        rigidBody = GetComponent<Rigidbody>();	
+        rigidBody = GetComponent<Rigidbody>();
+        manager = GameObject.FindObjectOfType<GameManager>();
 	}
 	
 	
 	void Update ()
     {
-        Record();
+        if (manager.recording)
+        {
+            Record();
+        } else
+        {
+            PlayBack();
+        }
 
     }
 
@@ -33,7 +41,7 @@ public class ReplaySystem : MonoBehaviour {
         rigidBody.isKinematic = false;
         int frame = Time.frameCount % bufferFrames;
         float time = Time.time;
-        print("Writing frame" + frame);
+        // print("Writing frame" + frame);
 
         keyFrames[frame] = new MyKeyFrame(time, transform.position, transform.rotation);
     }
